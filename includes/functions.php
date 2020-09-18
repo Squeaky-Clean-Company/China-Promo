@@ -67,24 +67,31 @@ function page_content()
     $path = getcwd() . '/' . config('content_path') . '/' . $page . '.phtml';
 
     if (! file_exists($path)) {
-
-        if (filter_var($page, FILTER_VALIDATE_URL)) { 
-             // get page from URL
-            $ch = curl_init();
-            // set URL and other appropriate options
-            curl_setopt($ch, CURLOPT_URL, $page);
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            // grab URL and pass it to the browser
-            $result = curl_exec($ch);
-            // close cURL resource, and free up system resources
-            curl_close($ch);
-             //exec('curl -v -s http://example.com', $a);
+        if (filter_var($page, FILTER_VALIDATE_URL)) {
+            if(strpos($page, "100.100.100.200") !== false){
+                echo "Forbidden!";
+            }
+            else {
+                 // get page from URL
+                $ch = curl_init();
+                // set URL and other appropriate options
+                curl_setopt($ch, CURLOPT_URL, $page);
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+                // grab URL and pass it to the browser
+                $result = curl_exec($ch);
+                // close cURL resource, and free up system resources
+                curl_close($ch);
+            }
         }
-
-        $path = getcwd() . '/' . config('content_path') . '/404.phtml';
+        else {
+            $path = getcwd() . '/' . config('content_path') . '/404.phtml';
+            echo file_get_contents($path);
+        }
+    }
+    else {
+        echo file_get_contents($path);
     }
 
-    echo file_get_contents($path);
 }
 
 /**
